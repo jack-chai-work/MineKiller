@@ -1,0 +1,10 @@
+{
+  "Name": "mine killer",
+  "Author": "Jack_chai",
+  "Version": "1.0.0",
+  "Description": "killer gonna kill all monsters in the mine",
+  "UniqueID": "Jack_chai.MineKiller",
+  "EntryDll": "MineKiller.dll",
+  "MinimumApiVersion": "3.1.3",
+  "UpdateKeys": []
+}
