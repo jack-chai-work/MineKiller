@@ -78,7 +78,7 @@ namespace MineKiller
         }
 
 
-        public double CalculateLineDistance(Vector2 a, Vector2 b)
+        private double CalculateLineDistance(Vector2 a, Vector2 b)
         {
             double line = 0;
             //√（x₁-x₂）²+（y₁-y₂）²
@@ -91,7 +91,11 @@ namespace MineKiller
         private bool IsIncludeRange(Vector2 a, Vector2 b, int range)
         {
             double distance = CalculateLineDistance(a, b);
-            return distance < range;
+            if (distance < 0)
+            {
+                distance *= -1;
+            }
+            return distance <= range;
         }
     }
 }
