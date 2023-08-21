@@ -6,7 +6,6 @@ namespace MineKiller
 {
     internal sealed class ModEntry : Mod
     {
-
         private readonly Killer _killer = new Killer();
 
         private Config _config;
@@ -19,12 +18,16 @@ namespace MineKiller
         public override void Entry(IModHelper helper)
         {
             _config = Helper.ReadConfig<Config>();
-            _killer.InitKiller(helper,Monitor, _config);
-          helper.Events.Input.ButtonPressed += this.OnButtonPressed;
+            if (string.IsNullOrEmpty(_config.Key))
+            {
+                _config.Key = "J";
+            }
+            _killer.InitKiller(helper, Monitor, _config);
+            helper.Events.Input.ButtonPressed += this.OnButtonPressed;
             helper.Events.Player.Warped += OnWarped;
             helper.Events.GameLoop.OneSecondUpdateTicked += OnUpdateTicked;
         }
-        
+
         /*********
          ** Private methods
          *********/
@@ -36,23 +39,22 @@ namespace MineKiller
             // ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady || Game1.currentMinigame != null)
                 return;
-
-            if (_config.Key.Equals(e.Button.ToString()))
+            if (_config.Key.ToUpper().Equals(e.Button.ToString().ToUpper()))
             {
-                this.Monitor.Log($"{Game1.player.Name} pressed {_config.Key}.", LogLevel.Debug);
+                _config.IsEnable = !_config.IsEnable;
+                string message = _config.IsEnable ? "killer activated" : "killer deactivated";
+                int messageType = _config.IsEnable ? 4 : 3;
+                _killer.ReloadConfig(_config);
+                Game1.addHUDMessage(new HUDMessage(message,messageType));
             }
 
-            // print button presses to the console window
-            // this.Monitor.Log($"{Game1.player.Name} pressed {e.Button}.", LogLevel.Debug);
         }
 
         private void OnWarped(object sender, WarpedEventArgs e)
         {
-
             Farmer farmer = e.Player;
             GameLocation location = e.NewLocation;
             this.Monitor.Log($"{farmer.Name} location is  {location}.", LogLevel.Debug);
-
         }
 
         private void OnUpdateTicked(object sender, OneSecondUpdateTickedEventArgs e)
@@ -60,8 +62,7 @@ namespace MineKiller
             // ignore if player hasn't loaded a save yet
             if (!Context.IsWorldReady)
                 return;
-            _killer.KillMonsters(Game1.player,Game1.currentLocation);
+            _killer.KillMonsters(Game1.player, Game1.currentLocation);
         }
-    
     }
 }

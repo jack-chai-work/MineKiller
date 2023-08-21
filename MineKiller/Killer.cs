@@ -23,9 +23,17 @@ namespace MineKiller
             _config = config;
         }
 
+        public void ReloadConfig(Config config)
+        {
+            _config = config;
+        }
 
         public void KillMonsters(Farmer player, GameLocation location)
         {
+            if (!_config.IsEnable)
+            {
+                return;
+            }
             if (location is not MineShaft && location is not VolcanoDungeon && location is not Woods)
             {
                 return;
