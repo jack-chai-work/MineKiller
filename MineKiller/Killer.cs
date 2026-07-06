@@ -45,7 +45,7 @@ namespace MineKiller
             }
 
             NetCollection<NPC> characters = location.characters;
-            for (var i = 0; i < characters.Count; i++)
+            for (var i = characters.Count - 1; i >= 0; i--)
             {
                 NPC character = characters[i];
                 if (character is not Monster)
@@ -91,10 +91,6 @@ namespace MineKiller
         private bool IsIncludeRange(Vector2 a, Vector2 b, int range)
         {
             double distance = CalculateLineDistance(a, b);
-            if (distance < 0)
-            {
-                distance *= -1;
-            }
             return distance <= range;
         }
     }
